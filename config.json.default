@@ -6,6 +6,6 @@
 	"openai": {
 		"key": "",
 		"resetTime": 600000,
-		"basePrompt": {"role": "system", "name": "Bot", "content": "You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible. Knowledge cutoff: 2021, You do not have access to the current date or time. The maximum number of characters in your response is exactly 2000 characters, no more."}
+		"basePrompt": {"role": "system", "name": "Bot"}
 	}
 }
