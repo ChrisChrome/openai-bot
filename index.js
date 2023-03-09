@@ -93,13 +93,13 @@ client.on('interactionCreate', async (interaction) => {
 						title: lang.info,
 						description: lang.infoDesc.replace("{userCount}", userCount).replace("{botCount}", botCount).replace("{total}", userCount + botCount),
 						color: 0x00FFFF,
-						
+
 						// This is broken, I don't know why, 
 						footer: {
 							text: lang.infoFooter
 						},
 						timestamp: sessions[interaction.channelId].started
-						
+
 					}]
 				});
 			}
@@ -118,9 +118,10 @@ client.on('messageCreate', async (message) => {
 			started: new Date(),
 		};
 	}
+	message.channel.sendTyping();
 	var typing = setInterval(() => {
 		message.channel.sendTyping();
-	}, 1000)
+	}, 5000)
 	// Add the message to the session
 	sessions[message.channelId].messages.push({
 		"name": `${message.author.id}`,
@@ -138,7 +139,25 @@ client.on('messageCreate', async (message) => {
 		sessions[message.channelId].messages.push(output);
 		// Send the bot's response
 		clearInterval(typing);
-		message.reply(output.content);
+		// If output.content is longer than 2000 characters, upload it as a txt file
+		if (output.content.length > 2000) {
+			message.channel.send({
+				files: [{
+					attachment: Buffer.from(output.content),
+					name: "output.txt"
+				}]
+			});
+		} else {
+			message.channel.send(output.content);
+		}
+	}).catch((err) => {
+		message.channel.send({
+			"embeds": [{
+				"title": "Error",
+				"description": err,
+				"color": 0xFF0000
+			}]
+		})
 	});
 });
 
