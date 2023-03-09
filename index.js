@@ -142,6 +142,15 @@ client.on('messageCreate', async (message) => {
 	});
 });
 
+console.log(`╔═══╗╔═══╗╔════╗╔══╗      ╔╗     
+║╔═╗║║╔═╗║║╔╗╔╗║║╔╗║     ╔╝╚╗    
+║║ ╚╝║╚═╝║╚╝║║╚╝║╚╝╚╗╔══╗╚╗╔╝    
+║║╔═╗║╔══╝  ║║  ║╔═╗║║╔╗║ ║║     
+║╚╩═║║║    ╔╝╚╗ ║╚═╝║║╚╝║ ║╚╗    
+╚═══╝╚╝    ╚══╝ ╚═══╝╚══╝ ╚═╝    
+                                 
+                                 
+`)
 // Init
 console.log(`${colors.cyan("[INFO]")} Starting...`)
 // Start timer to see how long startup takes
