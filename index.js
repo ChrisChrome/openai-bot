@@ -84,7 +84,9 @@ client.on('messageCreate', async (message) => {
 			message.channel.send(lang.timeout)
 		}, config.openai.resetTime);
 	}
-	message.channel.sendTyping();
+	var typing = setInterval(() => {
+		message.channel.sendTyping();
+	}, 1000)
 	// Add the message to the session
 	sessions[message.channelId].messages.push({
 		"name": "User",
@@ -101,6 +103,7 @@ client.on('messageCreate', async (message) => {
 		// Add the bot's response to the session
 		sessions[message.channelId].messages.push(output);
 		// Send the bot's response
+		clearInterval(typing);
 		message.channel.send(output.content);
 	});
 });
