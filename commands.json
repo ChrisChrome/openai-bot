@@ -1,0 +1,7 @@
+[
+	{
+		"name": "reset",
+		"description": "Reset the GPT-3 chat",
+		"type": 1
+	}
+]

@@ -1,0 +1,9 @@
+{
+	"discord": {
+		"token": "",
+		"channel": ""
+	},
+	"openai": {
+		"key": ""
+	}
+}
