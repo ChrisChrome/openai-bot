@@ -4,6 +4,7 @@
 		"channel": ""
 	},
 	"openai": {
-		"key": ""
+		"key": "",
+		"resetTime": 
 	}
 }
