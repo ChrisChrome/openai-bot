@@ -24,6 +24,9 @@ const client = new Discord.Client({
 	intents: ["MessageContent", "GuildMessages", "Guilds"]
 });
 var sessions = {}; // Keep track of sessions, not really used right now, but if I wanted to allow multiple sessions, I could
+var basePrompt = config.openai.basePrompt
+basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
+
 client.on("ready", () => {
 	console.log(`${colors.cyan("[INFO]")} Logged in as ${colors.green(client.user.tag)}`)
 	// Log startup time in seconds
@@ -53,43 +56,74 @@ client.on("ready", () => {
 
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isCommand()) return;
-	switch(interaction.commandName) {
-		case "reset": 
-			// Reset the session
-			sessions[interaction.channelId] = {messages: []};
+	if (!config.discord.authorized_channels.includes(interaction.channelId)) return; // Only allow messages in the authorized channels
+	switch (interaction.commandName) {
+		case "reset":
+			// Remove the session
+			await delete sessions[interaction.channelId];
 			interaction.reply(lang.reset);
+			break;
+		case "info": // Info about the current session
+			// If the session is empty other than the base prompt, say so
+			if (!sessions[interaction.channelId]) return interaction.reply({
+				ephemeral: true,
+				content: lang.empty
+			});
+			if (sessions[interaction.channelId].messages.length == 1) {
+				return interaction.reply({
+					ephemeral: true,
+					content: lang.empty
+				});
+			} else {
+				// Otherwise, give some info like message count for both the user and the bot, and total message count
+				var userCount = 0;
+				var botCount = 0;
+				// Await counting the messages
+				await sessions[interaction.channelId].messages.forEach((message) => {
+					// Ignore the base prompt
+					if (message.content == basePrompt) return;
+					if (message.role == "user") {
+						userCount++;
+					} else if (message.role == "assistant") {
+						botCount++;
+					}
+				});
+				interaction.reply({
+					embeds: [{
+						title: lang.info,
+						description: lang.infoDesc.replace("{userCount}", userCount).replace("{botCount}", botCount).replace("{total}", userCount + botCount),
+						color: 0x00FFFF,
+						
+						// This is broken, I don't know why, 
+						footer: {
+							text: lang.infoFooter
+						},
+						timestamp: sessions[interaction.channelId].started
+						
+					}]
+				});
+			}
 			break;
 	}
 });
 
 client.on('messageCreate', async (message) => {
-	if(!message.channelId == config.discord.channel) return;
-	if(message.author.bot) return;
-	if(message.content.startsWith("!!")) return; // So you can chat without the bot replying
+	if (!config.discord.authorized_channels.includes(message.channelId)) return; // Only allow messages in the authorized channels
+	if (message.author.bot) return;
+	if (message.content.startsWith("!!")) return; // So you can chat without the bot replying
 	// If the session doesn't exist, create it
 	if (!sessions[message.channelId]) {
 		sessions[message.channelId] = {
-			messages: [],
-			// 10 minute auto reset
-			autoReset: setTimeout(() => {
-				sessions[message.channelId] = {messages: []};
-				message.channel.send(lang.timeout)
-			}, config.openai.resetTime)
+			messages: [basePrompt],
+			started: new Date(),
 		};
-	} else {
-		// Reset the auto reset timer
-		clearTimeout(sessions[message.channelId].autoReset);
-		sessions[message.channelId].autoReset = setTimeout(() => {
-			sessions[message.channelId] = {messages: []};
-			message.channel.send(lang.timeout)
-		}, config.openai.resetTime);
 	}
 	var typing = setInterval(() => {
 		message.channel.sendTyping();
 	}, 1000)
 	// Add the message to the session
 	sessions[message.channelId].messages.push({
-		"name": "User",
+		"name": `${message.author.id}`,
 		"content": message.content,
 		"role": "user"
 	});
@@ -104,7 +138,7 @@ client.on('messageCreate', async (message) => {
 		sessions[message.channelId].messages.push(output);
 		// Send the bot's response
 		clearInterval(typing);
-		message.channel.send(output.content);
+		message.reply(output.content);
 	});
 });
 

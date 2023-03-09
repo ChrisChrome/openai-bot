@@ -3,5 +3,10 @@
 		"name": "reset",
 		"description": "Reset the GPT-3 chat",
 		"type": 1
+	},
+	{
+		"name": "info",
+		"description": "Info about the current session",
+		"type": 1
 	}
 ]

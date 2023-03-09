@@ -6,5 +6,9 @@
 			"description": "Your session has timed out. Say anything to start a new one!",
 			"color": 16711680
 		}]
-	}
+	},
+	"empty": "There isn't a session here.",
+	"info": "Current Session",
+	"infoDesc": "AI Messages: {botCount}\nUser Messages: {userCount}\nTotal Messages: {total}",
+	"infoFooter": "Session Started"
 }
