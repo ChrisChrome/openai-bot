@@ -108,7 +108,7 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.on('messageCreate', async (message) => {
-	if (!config.discord.authorized_channels.includes(message.channelId)) return; // Only allow messages in the authorized channels
+	if (!config.discord.authorized_channels.includes(message.channelId) && !config.discord.authorized_channels.includes(message.channel.parentId)) return; // Only allow messages in the authorized channels
 	if (message.author.bot) return;
 	if (message.content.startsWith("!!")) return; // So you can chat without the bot replying
 	// If the session doesn't exist, create it
