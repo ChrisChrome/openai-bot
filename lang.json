@@ -1,4 +1,10 @@
 {
 	"reset": "Session reset.",
-	"timeout": "Session timed out. Type anything to start a new session."
+	"timeout": {
+		"embeds": [{
+			"title": "Session timeout",
+			"description": "Your session has timed out. Say anything to start a new one!",
+			"color": 16711680
+		}]
+	}
 }
