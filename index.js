@@ -60,6 +60,7 @@ client.on('interactionCreate', async (interaction) => {
 	switch (interaction.commandName) {
 		case "reset":
 			// Remove the session
+			console.log(`${colors.cyan("[INFO]")} Resetting session for ${colors.green(interaction.channelId)} (${interaction.channel.name})}`)
 			await delete sessions[interaction.channelId];
 			interaction.reply(lang.reset);
 			break;
