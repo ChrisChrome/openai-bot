@@ -24,8 +24,18 @@ const client = new Discord.Client({
 	intents: ["MessageContent", "GuildMessages", "Guilds"]
 });
 var sessions = {}; // Keep track of sessions, not really used right now, but if I wanted to allow multiple sessions, I could
+var timers = {}; // Keep track of reset timers
 var basePrompt = config.openai.basePrompt
 basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
+
+const resetSession = async (id) => {
+	if (timers[id]) {
+		await clearTimeout(timers[id]);
+		delete timers[id];
+	};
+	await delete sessions[id];
+	return true;
+}
 
 client.on("ready", () => {
 	console.log(`${colors.cyan("[INFO]")} Logged in as ${colors.green(client.user.tag)}`)
@@ -60,7 +70,7 @@ client.on('interactionCreate', async (interaction) => {
 	switch (interaction.commandName) {
 		case "reset":
 			// Remove the session
-			await delete sessions[interaction.channelId];
+			await resetSession(interaction.channelId);
 			interaction.reply(lang.reset);
 			break;
 		case "info": // Info about the current session
@@ -118,6 +128,12 @@ client.on('messageCreate', async (message) => {
 			started: new Date(),
 		};
 	}
+	// If the session already exists, reset the timer
+	if (timers[message.channelId]) {
+		await clearTimeout(timers[message.channelId]);
+		delete timers[message.channelId];
+	}
+
 	message.channel.sendTyping();
 	var typing = setInterval(() => {
 		message.channel.sendTyping();
@@ -150,6 +166,11 @@ client.on('messageCreate', async (message) => {
 		} else {
 			message.channel.send(output.content);
 		}
+		// Set the reset timer
+		timers[message.channelId] = setTimeout(() => {
+			resetSession(message.channelId);
+			message.channel.send(lang.timeout)
+		}, config.openai.resetTime);
 	}).catch((err) => {
 		message.channel.send({
 			"embeds": [{
