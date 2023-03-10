@@ -137,7 +137,11 @@ client.on('messageCreate', async (message) => {
 	// If the session is processing, don't do anything
 	if (sessions[message.channelId].processing) {
 		message.delete();
-		return message.author.send(lang.busy);
+		return message.author.send(lang.busy).then((msg) => {
+			setTimeout(() => {
+				msg.delete();
+			}, 10000);
+		});
 	}
 	// Set the timer
 	message.channel.sendTyping();
