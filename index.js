@@ -148,7 +148,10 @@ client.on('messageCreate', async (message) => {
 	}).then((data) => {
 		output = data.data.choices[0].message;
 		output.name = "Bot";
-		if (output.content == "!!!TERM1234!!!") { // This can allow a self-termination command
+		if (output.content.endsWith("!!!TERM1234!!!")) { // This can allow a self-termination command
+			output.content = output.content.replace("!!!TERM1234!!!", "");
+			clearInterval(typing);
+			message.channel.send(output.content);
 			resetSession(message.channelId);
 			return message.channel.send(lang.terminated);
 		}
