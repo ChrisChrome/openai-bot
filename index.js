@@ -28,8 +28,10 @@ var timers = {}; // Keep track of reset timers
 var basePrompt = config.openai.basePrompt
 // If modPrompt.txt exists, use that instead of basePrompt.txt
 if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
+	console.log(`${colors.cyan("[INFO]")} Using Custom Prompt.`);
 	basePrompt.content = fs.readFileSync("./modPrompt.txt", "utf8").toString();
 } else {
+	console.log(`${colors.cyan("[INFO]")} Using Default Prompt.`);
 	basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
 }
 
