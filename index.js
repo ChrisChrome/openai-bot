@@ -71,7 +71,7 @@ client.on('interactionCreate', async (interaction) => {
 				await resetSession(interaction.channelId);
 				interaction.reply(lang.reset);
 			} else {
-				interaction.reply(lang.busy);
+				interaction.reply({content: lang.busy, ephemeral: true});
 			}
 			break;
 		case "info": // Info about the current session
@@ -134,6 +134,8 @@ client.on('messageCreate', async (message) => {
 		await clearTimeout(timers[message.channelId]);
 		delete timers[message.channelId];
 	}
+	// If the session is processing, don't do anything
+	if (sessions[message.channelId].processing) return message.author.send(lang.busy);
 	// Set the timer
 	message.channel.sendTyping();
 	var typing = setInterval(() => {
