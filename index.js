@@ -151,7 +151,7 @@ client.on('messageCreate', async (message) => {
 		if (output.content.endsWith("!!!TERM1234!!!")) { // This can allow a self-termination command
 			output.content = output.content.replace("!!!TERM1234!!!", "");
 			clearInterval(typing);
-			message.channel.send(output.content);
+			if (output.content.length != 0) message.channel.send(output.content);
 			resetSession(message.channelId);
 			return message.channel.send(lang.terminated);
 		}
