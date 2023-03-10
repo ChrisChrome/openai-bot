@@ -149,7 +149,7 @@ client.on('messageCreate', async (message) => {
 		output = data.data.choices[0].message;
 		output.name = "Bot";
 		if (output.content.endsWith("!!!TERM1234!!!")) { // This can allow a self-termination command
-			console.log(`${colors.cyan("[INFO]")} Self termination command detected in ${colors.green(message.channel.name)} (${colors.green(message.channelId)}): ${colors.green(message.content)}`)
+			console.log(`${colors.cyan("[INFO]")} Self termination command detected in ${colors.green(message.channel.name)} (${colors.green(message.channelId)}): ${colors.green(output.content)}`)
 			output.content = output.content.replace("!!!TERM1234!!!", "");
 			clearInterval(typing);
 			if (output.content.length != 0) message.channel.send(output.content);
