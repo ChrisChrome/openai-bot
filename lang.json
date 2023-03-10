@@ -10,5 +10,12 @@
 	"empty": "There isn't a session here.",
 	"info": "Current Session",
 	"infoDesc": "AI Messages: {botCount}\nUser Messages: {userCount}\nTotal Messages: {total}",
-	"infoFooter": "Session Started"
+	"infoFooter": "Session Started",
+	"terminated": {
+		"embeds": [{
+			"title": "Self-Terminated",
+			"description": "The AI has decided to terminate the session.",
+			"color": 16711680
+		}]
+	}
 }

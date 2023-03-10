@@ -148,6 +148,10 @@ client.on('messageCreate', async (message) => {
 	}).then((data) => {
 		output = data.data.choices[0].message;
 		output.name = "Bot";
+		if (output.content == "!!!TERM1234!!!") { // This can allow a self-termination command
+			resetSession(message.channelId);
+			return message.channel.send(lang.terminated);
+		}
 		// Add the bot's response to the session
 		sessions[message.channelId].messages.push(output);
 		// Send the bot's response
@@ -166,10 +170,10 @@ client.on('messageCreate', async (message) => {
 		// Set the reset timer
 		timers[message.channelId] = setTimeout(() => {
 			resetSession(message.channelId);
-			message.channel.send(lang.timeout)
+			return message.channel.send(lang.timeout)
 		}, config.openai.resetTime);
 	}).catch((err) => {
-		message.channel.send({
+		return message.channel.send({
 			"embeds": [{
 				"title": "Error",
 				"description": err,
