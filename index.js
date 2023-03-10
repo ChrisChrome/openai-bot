@@ -23,17 +23,7 @@ const colors = require("colors");
 const client = new Discord.Client({
 	intents: ["MessageContent", "GuildMessages", "Guilds"]
 });
-var sessions = {}; // Keep track of sessions, not really used right now, but if I wanted to allow multiple sessions, I could
-var timers = {}; // Keep track of reset timers
-var basePrompt = config.openai.basePrompt
-// If modPrompt.txt exists, use that instead of basePrompt.txt
-if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
-	console.log(`${colors.cyan("[INFO]")} Using Custom Prompt.`);
-	basePrompt.content = fs.readFileSync("./modPrompt.txt", "utf8").toString();
-} else {
-	console.log(`${colors.cyan("[INFO]")} Using Default Prompt.`);
-	basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
-}
+
 
 const resetSession = async (id) => {
 	if (timers[id]) {
@@ -199,6 +189,19 @@ console.log(`╔═══╗╔═══╗╔════╗╔══╗      �
                                  
 `)
 // Init
+
+var sessions = {}; // Keep track of sessions, not really used right now, but if I wanted to allow multiple sessions, I could
+var timers = {}; // Keep track of reset timers
+var basePrompt = config.openai.basePrompt
+// If modPrompt.txt exists, use that instead of basePrompt.txt
+if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
+	console.log(`${colors.cyan("[INFO]")} Using Custom Prompt.`);
+	basePrompt.content = fs.readFileSync("./modPrompt.txt", "utf8").toString();
+} else {
+	console.log(`${colors.cyan("[INFO]")} Using Default Prompt.`);
+	basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
+}
+
 console.log(`${colors.cyan("[INFO]")} Starting...`)
 // Start timer to see how long startup takes
 const initTime = Date.now()
