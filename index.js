@@ -135,7 +135,10 @@ client.on('messageCreate', async (message) => {
 		delete timers[message.channelId];
 	}
 	// If the session is processing, don't do anything
-	if (sessions[message.channelId].processing) return message.author.send(lang.busy);
+	if (sessions[message.channelId].processing) {
+		message.delete();
+		return message.author.send(lang.busy);
+	}
 	// Set the timer
 	message.channel.sendTyping();
 	var typing = setInterval(() => {
