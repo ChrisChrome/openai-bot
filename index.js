@@ -137,9 +137,7 @@ client.on('messageCreate', async (message) => {
 	// If the session is processing, don't do anything
 	if (sessions[message.channelId].processing) {
 		// if the bot has perms attempt to delete the message
-		if (message.guild.me.permissions.has("MANAGE_MESSAGES")) {
-			message.delete();
-		}
+		if ((await message.guild.members.fetchMe()).permissions.has("ManageMessages")) message.delete();
 		return message.author.send(lang.busy).then((msg) => {
 			setTimeout(() => {
 				msg.delete();
