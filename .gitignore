@@ -135,3 +135,4 @@ config.json.disabled
 .ssh/*
 !.ssh/.gitkeep
 testing/
+modPrompt.txt

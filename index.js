@@ -26,7 +26,12 @@ const client = new Discord.Client({
 var sessions = {}; // Keep track of sessions, not really used right now, but if I wanted to allow multiple sessions, I could
 var timers = {}; // Keep track of reset timers
 var basePrompt = config.openai.basePrompt
-basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
+// If modPrompt.txt exists, use that instead of basePrompt.txt
+if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
+	basePrompt.content = fs.readFileSync("./modPrompt.txt", "utf8").toString();
+} else {
+	basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
+}
 
 const resetSession = async (id) => {
 	if (timers[id]) {
