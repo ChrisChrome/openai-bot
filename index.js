@@ -67,8 +67,12 @@ client.on('interactionCreate', async (interaction) => {
 	switch (interaction.commandName) {
 		case "reset":
 			// Remove the session
-			await resetSession(interaction.channelId);
-			interaction.reply(lang.reset);
+			if (!sessions[interaction.channelId].processing) {
+				await resetSession(interaction.channelId);
+				interaction.reply(lang.reset);
+			} else {
+				interaction.reply(lang.busy);
+			}
 			break;
 		case "info": // Info about the current session
 			// If the session is empty other than the base prompt, say so
@@ -130,11 +134,13 @@ client.on('messageCreate', async (message) => {
 		await clearTimeout(timers[message.channelId]);
 		delete timers[message.channelId];
 	}
-
+	// Set the timer
 	message.channel.sendTyping();
 	var typing = setInterval(() => {
 		message.channel.sendTyping();
 	}, 5000)
+	// Set processing to true
+	sessions[message.channelId].processing = true;
 	// Add the message to the session
 	sessions[message.channelId].messages.push({
 		"name": `${message.author.id}`,
@@ -171,6 +177,7 @@ client.on('messageCreate', async (message) => {
 		} else {
 			message.channel.send(output.content);
 		}
+		sessions[message.channelId].processing = false;
 		// Set the reset timer
 		timers[message.channelId] = setTimeout(() => {
 			resetSession(message.channelId);
