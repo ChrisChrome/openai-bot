@@ -67,6 +67,10 @@ client.on('interactionCreate', async (interaction) => {
 	switch (interaction.commandName) {
 		case "reset":
 			// Remove the session
+			if (!sessions[interaction.channelId]) return interaction.reply({
+				ephemeral: true,
+				content: lang.empty
+			});
 			if (!sessions[interaction.channelId].processing) {
 				await resetSession(interaction.channelId);
 				interaction.reply(lang.reset);
