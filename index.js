@@ -21,7 +21,7 @@ const colors = require("colors");
 
 // Create a new Discord client
 const client = new Discord.Client({
-	intents: ["MessageContent", "GuildMessages", "Guilds"]
+	intents: ["MessageContent", "GuildMessages", "Guilds", "GuildMembers", "DirectMessages"]
 });
 
 
@@ -53,7 +53,12 @@ client.on("ready", () => {
 						body: commands
 					},
 				);
-			}
+			};
+			await rest.put(
+				Routes.applicationCommands(client.user.id), {
+					body: commands
+				},
+			);
 			console.log(`${colors.cyan("[INFO]")} Successfully registered commands. Took ${colors.green((Date.now() - start) / 1000)} seconds.`);
 		} catch (error) {
 			console.error(error);
@@ -63,7 +68,9 @@ client.on("ready", () => {
 
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isCommand()) return;
-	if (!config.discord.authorized_channels.includes(interaction.channelId) && !config.discord.authorized_channels.includes(interaction.channel.parentId)) return interaction.reply({ephemeral: true, content: lang.noauth}); // Only allow messages in the authorized channels
+	if(interaction.guild !== null) {
+		if ((!config.discord.authorized_channels.includes(interaction.channelId) && !config.discord.authorized_channels.includes(interaction.channel.parentId))) return interaction.reply({ephemeral: true, content: lang.noauth}); // Only allow messages in the authorized channels
+	}
 	switch (interaction.commandName) {
 		case "reset":
 			// Remove the session
@@ -123,8 +130,10 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.on('messageCreate', async (message) => {
-	if (!config.discord.authorized_channels.includes(message.channelId) && !config.discord.authorized_channels.includes(message.channel.parentId)) return; // Only allow messages in the authorized channels
 	if (message.author.bot) return;
+	if(message.guild !== null) {
+		if ((!config.discord.authorized_channels.includes(message.channelId) && !config.discord.authorized_channels.includes(message.channel.parentId))) return; // Only allow messages in the authorized channels
+	}
 	if (message.content.startsWith("!!")) return; // So you can chat without the bot replying
 	// If the session doesn't exist, create it
 	if (!sessions[message.channelId]) {
@@ -208,6 +217,7 @@ client.on('messageCreate', async (message) => {
 	});
 });
 
+
 console.log(`╔═══╗╔═══╗╔════╗╔══╗      ╔╗     
 ║╔═╗║║╔═╗║║╔╗╔╗║║╔╗║     ╔╝╚╗    
 ║║ ╚╝║╚═╝║╚╝║║╚╝║╚╝╚╗╔══╗╚╗╔╝    
@@ -230,6 +240,16 @@ if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
 	console.log(`${colors.cyan("[INFO]")} Using Default Prompt.`);
 	basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
 }
+
+// Handle SIGINT gracefully
+process.on('SIGINT', async () => {
+	await console.log(`${colors.cyan("[INFO]")} Stop received, exiting...`);
+	await client.user.setPresence({status: "invisible", activities: []});
+	await client.destroy();
+	await console.log(`${colors.cyan("[INFO]")} Goodbye!`);
+	process.exit(0);
+});
+
 
 console.log(`${colors.cyan("[INFO]")} Starting...`)
 // Start timer to see how long startup takes
