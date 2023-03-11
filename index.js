@@ -63,7 +63,7 @@ client.on("ready", () => {
 
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isCommand()) return;
-	if (!config.discord.authorized_channels.includes(interaction.channelId) && !config.discord.authorized_channels.includes(interaction.channel.parentId)) return; // Only allow messages in the authorized channels
+	if (!config.discord.authorized_channels.includes(interaction.channelId) && !config.discord.authorized_channels.includes(interaction.channel.parentId)) return interaction.reply({ephemeral: true, content: lang.noauth}); // Only allow messages in the authorized channels
 	switch (interaction.commandName) {
 		case "reset":
 			// Remove the session
