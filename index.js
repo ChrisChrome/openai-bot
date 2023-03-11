@@ -47,6 +47,7 @@ client.on("ready", () => {
 			let start = Date.now()
 			// For every guild
 			for (const guild of client.guilds.cache.values()) {
+				let gStart = Date.now();
 				console.log(`${colors.cyan("[INFO]")} Registering Commands for ${colors.green(guild.name)}...`);
 				// Register commands
 				await rest.put(
@@ -54,6 +55,7 @@ client.on("ready", () => {
 						body: commands
 					},
 				);
+				console.log(`${colors.cyan("[INFO]")} Successfully registered commands for ${colors.green(guild.name)}. Took ${colors.green((Date.now() - gStart) / 1000)} seconds.`);
 			};
 			// Register global commands
 			console.log(`${colors.cyan("[INFO]")} Registering Global Commands...`);
