@@ -21,7 +21,7 @@ const colors = require("colors");
 
 // Create a new Discord client
 const client = new Discord.Client({
-	intents: ["MessageContent", "GuildMessages", "Guilds", "GuildMembers", "DirectMessages"]
+	intents: ["MessageContent", "GuildMessages", "Guilds", "DirectMessages"]
 });
 
 
