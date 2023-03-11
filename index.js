@@ -47,6 +47,7 @@ client.on("ready", () => {
 			let start = Date.now()
 			// For every guild
 			for (const guild of client.guilds.cache.values()) {
+				console.log(`${colors.cyan("[INFO]")} Registering Commands for ${colors.green(guild.name)}...`);
 				// Register commands
 				await rest.put(
 					Routes.applicationGuildCommands(client.user.id, guild.id), {
@@ -54,6 +55,8 @@ client.on("ready", () => {
 					},
 				);
 			};
+			// Register global commands
+			console.log(`${colors.cyan("[INFO]")} Registering Global Commands...`);
 			await rest.put(
 				Routes.applicationCommands(client.user.id), {
 					body: commands
