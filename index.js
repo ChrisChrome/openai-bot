@@ -57,13 +57,6 @@ client.on("ready", async () => {
 				);
 				console.log(`${colors.cyan("[INFO]")} Successfully registered commands for ${colors.green(guild.name)}. Took ${colors.green((Date.now() - gStart) / 1000)} seconds.`);
 			};
-			// Register global commands
-			console.log(`${colors.cyan("[INFO]")} Registering Global Commands...`);
-			await rest.put(
-				Routes.applicationCommands(client.user.id), {
-					body: commands
-				},
-			);
 			console.log(`${colors.cyan("[INFO]")} Successfully registered commands. Took ${colors.green((Date.now() - start) / 1000)} seconds.`);
 		} catch (error) {
 			console.error(error);
