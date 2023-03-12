@@ -273,9 +273,7 @@ if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
 	basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
 }
 
-var nsfwPrompt = config.openai.basePrompt
-// read nsfwPrompt.txt
-nsfwPrompt.content = fs.readFileSync("./nsfwPrompt.txt", "utf8").toString();
+var nsfwPrompt = {"role": "system", "name": "System", "content": fs.readFileSync("./nsfwPrompt.txt", "utf8").toString()}; // NSFW prompt for NSFW channels
 
 // Handle SIGINT gracefully
 process.on('SIGINT', async () => {
