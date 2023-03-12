@@ -69,6 +69,15 @@ client.on("ready", () => {
 			console.error(error);
 		}
 	})();
+
+	// Automatically leave servers that aren't in the authorized channels list
+	console.log(`${colors.cyan("[INFO]")} Leaving Servers...`)
+	client.guilds.cache.forEach((guild) => {
+		if (!config.discord.authorized_guilds.includes(guild.id)) {
+			guild.leave();
+			console.log(`${colors.cyan("[INFO]")} Left ${colors.green(guild.name)}`)
+		}
+	});
 });
 
 client.on('interactionCreate', async (interaction) => {

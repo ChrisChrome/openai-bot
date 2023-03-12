@@ -1,7 +1,8 @@
 {
 	"discord": {
 		"token": "",
-		"authorized_channels": [""]
+		"authorized_channels": [""],
+		"authorized_guilds": [""]
 	},
 	"openai": {
 		"key": "",
