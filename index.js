@@ -78,8 +78,8 @@ client.on("ready", async () => {
 	})();
 
 	// Set the bot's status
-	console.log(`${colors.cyan("[INFO]")} Setting status to ${colors.green(`${config.discord.status.type.toLowerCase()} ${config.discord.status.name}`)}`);
-	await client.user.setActivity(config.discord.status);
+	//console.log(`${colors.cyan("[INFO]")} Setting status to ${colors.green(`${config.discord.status.type.toLowerCase()} ${config.discord.status.name}`)}`);
+	//await client.user.setActivity(config.discord.status);
 
 	// Log startup time in seconds
 	console.log(`${colors.cyan("[INFO]")} Startup took ${colors.green((Date.now() - initTime) / 1000)} seconds.`)
