@@ -79,7 +79,7 @@ client.on("ready", () => {
 				console.log(`${colors.cyan("[INFO]")} Left ${colors.green(guild.name)}`)
 			}
 		});
-	})
+	})();
 
 });
 
