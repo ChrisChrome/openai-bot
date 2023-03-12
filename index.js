@@ -34,7 +34,7 @@ const resetSession = async (id) => {
 	return true;
 }
 
-client.on("ready", () => {
+client.on("ready", async () => {
 	console.log(`${colors.cyan("[INFO]")} Logged in as ${colors.green(client.user.tag)}`)
 	// Log startup time in seconds
 	console.log(`${colors.cyan("[INFO]")} Startup took ${colors.green((Date.now() - initTime) / 1000)} seconds.`)
