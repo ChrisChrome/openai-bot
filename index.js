@@ -41,7 +41,7 @@ client.on("ready", () => {
 	// Load Commands
 	console.log(`${colors.cyan("[INFO]")} Loading Commands...`)
 	const commands = require('./commands.json');
-	(async () => {
+	await (async () => {
 		try {
 			console.log(`${colors.cyan("[INFO]")} Registering Commands...`)
 			let start = Date.now()
@@ -71,19 +71,25 @@ client.on("ready", () => {
 	})();
 
 	// Automatically leave servers that aren't in the authorized channels list
-	console.log(`${colors.cyan("[INFO]")} Leaving Servers...`)
-	client.guilds.cache.forEach((guild) => {
-		if (!config.discord.authorized_guilds.includes(guild.id)) {
-			guild.leave();
-			console.log(`${colors.cyan("[INFO]")} Left ${colors.green(guild.name)}`)
-		}
-	});
+	await (async () => {
+		console.log(`${colors.cyan("[INFO]")} Leaving Servers...`)
+		client.guilds.cache.forEach((guild) => {
+			if (!config.discord.authorized_guilds.includes(guild.id)) {
+				guild.leave();
+				console.log(`${colors.cyan("[INFO]")} Left ${colors.green(guild.name)}`)
+			}
+		});
+	})
+
 });
 
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isCommand()) return;
-	if(interaction.guild !== null) {
-		if ((!config.discord.authorized_channels.includes(interaction.channelId) && !config.discord.authorized_channels.includes(interaction.channel.parentId))) return interaction.reply({ephemeral: true, content: lang.noauth}); // Only allow messages in the authorized channels
+	if (interaction.guild !== null) {
+		if ((!config.discord.authorized_channels.includes(interaction.channelId) && !config.discord.authorized_channels.includes(interaction.channel.parentId))) return interaction.reply({
+			ephemeral: true,
+			content: lang.noauth
+		}); // Only allow messages in the authorized channels
 	}
 	switch (interaction.commandName) {
 		case "reset":
@@ -96,7 +102,10 @@ client.on('interactionCreate', async (interaction) => {
 				await resetSession(interaction.channelId);
 				interaction.reply(lang.reset);
 			} else {
-				interaction.reply({content: lang.busy, ephemeral: true});
+				interaction.reply({
+					content: lang.busy,
+					ephemeral: true
+				});
 			}
 			break;
 		case "info": // Info about the current session
@@ -145,7 +154,7 @@ client.on('interactionCreate', async (interaction) => {
 
 client.on('messageCreate', async (message) => {
 	if (message.author.bot) return;
-	if(message.guild !== null) {
+	if (message.guild !== null) {
 		if ((!config.discord.authorized_channels.includes(message.channelId) && !config.discord.authorized_channels.includes(message.channel.parentId))) return; // Only allow messages in the authorized channels
 	}
 	if (message.content.startsWith("!!")) return; // So you can chat without the bot replying
@@ -258,7 +267,10 @@ if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
 // Handle SIGINT gracefully
 process.on('SIGINT', async () => {
 	await console.log(`${colors.cyan("[INFO]")} Stop received, exiting...`);
-	await client.user.setPresence({status: "invisible", activities: []});
+	await client.user.setPresence({
+		status: "invisible",
+		activities: []
+	});
 	await client.destroy();
 	await console.log(`${colors.cyan("[INFO]")} Goodbye!`);
 	process.exit(0);
