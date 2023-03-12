@@ -36,8 +36,6 @@ const resetSession = async (id) => {
 
 client.on("ready", async () => {
 	console.log(`${colors.cyan("[INFO]")} Logged in as ${colors.green(client.user.tag)}`)
-	// Log startup time in seconds
-	console.log(`${colors.cyan("[INFO]")} Startup took ${colors.green((Date.now() - initTime) / 1000)} seconds.`)
 	// Load Commands
 	console.log(`${colors.cyan("[INFO]")} Loading Commands...`)
 	const commands = require('./commands.json');
@@ -79,6 +77,8 @@ client.on("ready", async () => {
 		if (!m) console.log(`${colors.cyan("[INFO]")} No unauthorized guilds to leave.`);
 	})();
 
+	// Log startup time in seconds
+	console.log(`${colors.cyan("[INFO]")} Startup took ${colors.green((Date.now() - initTime) / 1000)} seconds.`)
 });
 
 client.on('interactionCreate', async (interaction) => {
