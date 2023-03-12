@@ -158,10 +158,17 @@ client.on('messageCreate', async (message) => {
 	if (message.content.startsWith("!!")) return; // So you can chat without the bot replying
 	// If the session doesn't exist, create it
 	if (!sessions[message.channelId]) {
-		sessions[message.channelId] = {
-			messages: [basePrompt],
-			started: new Date(),
-		};
+		if (message.channel.nsfw) {
+			sessions[message.channelId] = {
+				messages: [basePrompt, nsfwPrompt],
+				started: new Date(),
+			}
+		} else {
+			sessions[message.channelId] = {
+				messages: [basePrompt],
+				started: new Date(),
+			};
+		}
 	}
 	// If the session already exists, reset the timer
 	if (timers[message.channelId]) {
@@ -261,6 +268,10 @@ if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
 	console.log(`${colors.cyan("[INFO]")} Using Default Prompt.`);
 	basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
 }
+
+var nsfwPrompt = config.openai.basePrompt
+// read nsfwPrompt.txt
+nsfwPrompt.content = fs.readFileSync("./nsfwPrompt.txt", "utf8").toString();
 
 // Handle SIGINT gracefully
 process.on('SIGINT', async () => {
