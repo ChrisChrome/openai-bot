@@ -78,8 +78,8 @@ client.on("ready", async () => {
 	})();
 
 	// Set the bot's status
-	//console.log(`${colors.cyan("[INFO]")} Setting status to ${colors.green(`${config.discord.status.type.toLowerCase()} ${config.discord.status.name}`)}`);
-	//await client.user.setActivity(config.discord.status);
+	console.log(`${colors.cyan("[INFO]")} Setting status to ${colors.green(`${config.discord.status.type.toLowerCase()} ${config.discord.status.name}`)}`);
+	await client.user.setActivity(config.discord.status);
 
 	// Log startup time in seconds
 	console.log(`${colors.cyan("[INFO]")} Startup took ${colors.green((Date.now() - initTime) / 1000)} seconds.`)
@@ -273,7 +273,9 @@ if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
 	basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
 }
 
-var nsfwPrompt = {"role": "system", "name": "System", "content": fs.readFileSync("./nsfwPrompt.txt", "utf8").toString()};
+var nsfwPrompt = config.openai.basePrompt
+// read nsfwPrompt.txt
+nsfwPrompt.content = fs.readFileSync("./nsfwPrompt.txt", "utf8").toString();
 
 // Handle SIGINT gracefully
 process.on('SIGINT', async () => {
