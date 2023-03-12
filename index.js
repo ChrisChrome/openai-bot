@@ -72,9 +72,13 @@ client.on("ready", async () => {
 
 	// Automatically leave servers that aren't in the authorized channels list
 	await (async () => {
-		console.log(`${colors.cyan("[INFO]")} Leaving Servers...`)
+		let m = false;
 		client.guilds.cache.forEach((guild) => {
 			if (!config.discord.authorized_guilds.includes(guild.id)) {
+				if (!m) {
+					console.log(`${colors.cyan("[INFO]")} Leaving unauthorized guilds...`);
+					m = true;
+				}
 				guild.leave();
 				console.log(`${colors.cyan("[INFO]")} Left ${colors.green(guild.name)}`)
 			}
