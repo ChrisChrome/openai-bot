@@ -151,6 +151,20 @@ client.on('interactionCreate', async (interaction) => {
 				});
 			}
 			break;
+		case "debug": // Upload debug info such as the session
+
+			// Generate files array based on options
+			var files = [];
+			if (interaction.options.getBoolean("config")) files.push({name: "config.json", attachment: Buffer.from(JSON.stringify(config, null, "\t"))});
+			if (interaction.options.getBoolean("client")) files.push({name: "client.json", attachment: Buffer.from(JSON.stringify(client, null, "\t"))});
+			// if the object size of sessions isn't 0, push the sessions file
+			if (Object.keys(sessions).length !== 0) files.push({name: "sessions.json", attachment: Buffer.from(JSON.stringify(sessions, null, "\t"))});
+			// Upload the session
+			interaction.reply({
+				content: files.length == 0 ? "No files to upload." : null,
+				ephemeral: true,
+				files: files
+			});
 	}
 });
 
@@ -273,7 +287,11 @@ if (fs.existsSync(path.join(__dirname, "modPrompt.txt"))) {
 	basePrompt.content = fs.readFileSync("./basePrompt.txt", "utf8").toString();
 }
 
-var nsfwPrompt = {"role": "system", "name": "System", "content": fs.readFileSync("./nsfwPrompt.txt", "utf8").toString()}; // NSFW prompt for NSFW channels
+var nsfwPrompt = {
+	"role": "system",
+	"name": "System",
+	"content": fs.readFileSync("./nsfwPrompt.txt", "utf8").toString()
+}; // NSFW prompt for NSFW channels
 
 // Handle SIGINT gracefully
 process.on('SIGINT', async () => {

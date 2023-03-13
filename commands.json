@@ -8,5 +8,22 @@
 		"name": "info",
 		"description": "Info about the current session",
 		"type": 1
+	},
+	{
+		"name": "debug",
+		"description": "Uploads some debug information",
+		"type": 1,
+		"options": [
+			{
+				"name": "config",
+				"description": "Upload the config file",
+				"type": 5
+			},
+			{
+				"name": "client",
+				"description": "Upload the client object",
+				"type": 5
+			}
+		]
 	}
 ]
