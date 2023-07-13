@@ -88,7 +88,7 @@ client.on("ready", async () => {
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isCommand()) return;
 	if (interaction.guild !== null) {
-		if ((!config.discord.authorized_channels[message.channelId] && !config.discord.authorized_channels[message.channel.parentId])) return interaction.reply({
+		if ((!config.discord.authorized_channels[interaction.channelId] && !config.discord.authorized_channels[interaction.channel.parentId])) return interaction.reply({
 			ephemeral: true,
 			content: lang.noauth
 		}); // Only allow messages in the authorized channels
