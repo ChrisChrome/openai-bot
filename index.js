@@ -178,11 +178,13 @@ client.on('messageCreate', async (message) => {
 	if (!sessions[message.channelId]) {
 		if (message.channel.nsfw) {
 			sessions[message.channelId] = {
+				model: config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId],
 				messages: [basePrompt, nsfwPrompt],
 				started: new Date(),
 			}
 		} else {
 			sessions[message.channelId] = {
+				model: config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId],
 				messages: [basePrompt],
 				started: new Date(),
 			};
@@ -217,9 +219,8 @@ client.on('messageCreate', async (message) => {
 		"role": "user"
 	});
 	// Send the message to OpenAI
-	var model = config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId];
 	await openai.createChatCompletion({
-		model: model,
+		model: sessions[message.channelId].model,
 		messages: sessions[message.channelId].messages
 	}).then((data) => {
 		output = data.data.choices[0].message;
