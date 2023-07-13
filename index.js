@@ -21,7 +21,7 @@ const colors = require("colors");
 
 // Create a new Discord client
 const client = new Discord.Client({
-	intents: ["MessageContent", "GuildMessages", "Guilds", "DirectMessages"]
+	intents: ["MessageContent", "GuildMessages", "Guilds", "DirectMessages", "GuildMessages"]
 });
 
 
@@ -88,7 +88,7 @@ client.on("ready", async () => {
 client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isCommand()) return;
 	if (interaction.guild !== null) {
-		if ((!config.discord.authorized_channels.includes(interaction.channelId) && !config.discord.authorized_channels.includes(interaction.channel.parentId))) return interaction.reply({
+		if ((!config.discord.authorized_channels[message.channelId] && !config.discord.authorized_channels[message.channel.parentId])) return interaction.reply({
 			ephemeral: true,
 			content: lang.noauth
 		}); // Only allow messages in the authorized channels
@@ -171,7 +171,7 @@ client.on('interactionCreate', async (interaction) => {
 client.on('messageCreate', async (message) => {
 	if (message.author.bot) return;
 	if (message.guild !== null) {
-		if ((!config.discord.authorized_channels.includes(message.channelId) && !config.discord.authorized_channels.includes(message.channel.parentId))) return; // Only allow messages in the authorized channels
+		if ((!config.discord.authorized_channels[message.channelId] && !config.discord.authorized_channels[message.channel.parentId])) return; // Only allow messages in the authorized channels
 	}
 	if (message.content.startsWith("!!")) return; // So you can chat without the bot replying
 	// If the session doesn't exist, create it
@@ -217,8 +217,9 @@ client.on('messageCreate', async (message) => {
 		"role": "user"
 	});
 	// Send the message to OpenAI
+	var model = config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId];
 	await openai.createChatCompletion({
-		model: "gpt-3.5-turbo",
+		model: model,
 		messages: sessions[message.channelId].messages
 	}).then((data) => {
 		output = data.data.choices[0].message;
