@@ -21,7 +21,10 @@ const colors = require("colors");
 
 // Create a new Discord client
 const client = new Discord.Client({
-	intents: ["MessageContent", "GuildMessages", "Guilds", "DirectMessages", "GuildMessages"]
+	intents: ["MessageContent", "GuildMessages", "Guilds", "DirectMessages", "GuildMessages"],
+	allowedMentions: {	// Disable all mentions
+		parse: []
+	}
 });
 
 
@@ -223,6 +226,7 @@ client.on('messageCreate', async (message) => {
 		model: sessions[message.channelId].model,
 		messages: sessions[message.channelId].messages
 	}).then((data) => {
+		console.log(data.status)
 		output = data.data.choices[0].message;
 		output.name = "Bot";
 		if (output.content.endsWith("!!!TERM1234!!!")) { // This can allow a self-termination command
@@ -255,10 +259,13 @@ client.on('messageCreate', async (message) => {
 			return message.channel.send(lang.timeout)
 		}, config.openai.resetTime);
 	}).catch((err) => {
+		clearInterval(typing);
+		sessions[message.channelId].processing = false;
+		console.log(`${colors.red("[ERROR]")} An error occured: ${colors.red(err.response.status)}`);
 		return message.channel.send({
 			"embeds": [{
 				"title": "Error",
-				"description": err,
+				"description": `${lang.errors[err.response.status]}`,
 				"color": 0xFF0000
 			}]
 		})

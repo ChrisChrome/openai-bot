@@ -19,5 +19,8 @@
 		}]
 	},
 	"busy": "The bot is busy right now. Please try again later.",
-	"noauth": "This is not an authorized channel."
+	"noauth": "This is not an authorized channel.",
+	"errors": {
+		"429": "The bot has reached the $25 OpenAI limit for this month. Go bug <@289884287765839882> and maybe he'll raise the limit."
+	}
 }
