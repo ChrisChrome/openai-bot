@@ -217,7 +217,7 @@ client.on('messageCreate', async (message) => {
 	sessions[message.channelId].processing = true;
 	// Add the message to the session
 	sessions[message.channelId].messages.push({
-		"name": `${message.author.id}`,
+		"name": `${message.author.username}`,
 		"content": message.content,
 		"role": "user"
 	});
