@@ -246,7 +246,7 @@ client.on('messageCreate', async (message) => {
 			message.channel.send({
 				files: [{
 					attachment: Buffer.from(output.content),
-					name: "output.txt"
+					name: "output.md"
 				}]
 			});
 		} else {
