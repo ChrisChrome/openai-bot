@@ -191,7 +191,7 @@ client.on('messageCreate', async (message) => {
 					return {
 						"name": role.name,
 						"color": role.hexColor,
-						"permissions": role.permissions.bitfield.toString(2)
+						"permissions": role.permissions.toArray()
 					};
 				})
 			};
