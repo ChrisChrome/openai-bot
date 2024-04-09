@@ -186,7 +186,7 @@ client.on('messageCreate', async (message) => {
 					return {
 						"name": role.name,
 						"color": role.hexColor,
-						"permissions": role.permissions.toArray()
+						"permissions": role.permissions.bitfield.toString(2)
 					};
 				})
 			};
@@ -279,10 +279,11 @@ client.on('messageCreate', async (message) => {
 		clearInterval(typing);
 		sessions[message.channelId].processing = false;
 		console.log(`${colors.red("[ERROR]")} An error occured: ${colors.red(err.response.status)}`);
+		console.log(err.response.data);
 		return message.channel.send({
 			"embeds": [{
 				"title": "Error",
-				"description": `An error occured: \njson\n\`\`\`{${JSON.stringify(err, null, "\t")}}\`\`\``,
+				"description": `An error occured, Full details sent to the bot owner.`,
 				"color": 0xFF0000
 			}]
 		})
