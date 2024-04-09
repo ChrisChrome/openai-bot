@@ -198,19 +198,45 @@ client.on('messageCreate', async (message) => {
 		});
 		var userListPrompt = {
 			"role": "system",
-			"name": "System",
+			"name": "Guild Member List",
 			"content": JSON.stringify(users)
 		};
+
+		// Channel list prompt
+		var channels = {};
+		message.guild.channels.cache.forEach((channel) => {
+			channels[channel.id] = {
+				"name": channel.name,
+				"type": channel.type,
+				"parent": channel.parent ? channel.parent.name : null,
+				"nsfw": channel.nsfw,
+				"topic": channel.topic
+			};
+		});
+		var channelListPrompt = {
+			"role": "system",
+			"name": "Channel List",
+			"content": JSON.stringify(channels)
+		};
+
+		// General info (about the guild)
+		var generalInfoPrompt = {
+			"role": "system",
+			"name": "Guild Info",
+			"content": JSON.stringify(message.guild)
+		};
+
+
 		if (message.channel.nsfw) {
 			sessions[message.channelId] = {
 				model: config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId],
-				messages: [basePrompt, userListPrompt, nsfwPrompt],
+				messages: [basePrompt, generalInfoPrompt, userListPrompt, channelListPrompt, nsfwPrompt],
 				started: new Date(),
 			}
 		} else {
 			sessions[message.channelId] = {
 				model: config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId],
-				messages: [basePrompt, userListPrompt],
+				messages: [basePrompt, generalInfoPrompt, userListPrompt, channelListPrompt],
 				started: new Date(),
 			};
 		}
