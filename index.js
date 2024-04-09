@@ -179,7 +179,8 @@ client.on('messageCreate', async (message) => {
 		// Generate a users table, key is users username, value is their display name
 		var users = {};
 		message.guild.members.cache.forEach((member) => {
-			users[member.user.username] = {
+			users[member.user.id] = {
+				"username": member.user.username,
 				"displayName": member.displayName,
 				"id": member.id,
 				"roles": member.roles.cache.map((role) => {
@@ -234,7 +235,7 @@ client.on('messageCreate', async (message) => {
 	sessions[message.channelId].processing = true;
 	// Add the message to the session
 	sessions[message.channelId].messages.push({
-		"name": `${message.author.username}`,
+		"name": `${message.author.id}`,
 		"content": message.content,
 		"role": "user"
 	});
