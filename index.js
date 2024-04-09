@@ -198,7 +198,7 @@ client.on('messageCreate', async (message) => {
 		});
 		var userListPrompt = {
 			"role": "system",
-			"name": "Guild Member List",
+			"name": "member_list",
 			"content": JSON.stringify(users)
 		};
 
@@ -215,14 +215,14 @@ client.on('messageCreate', async (message) => {
 		});
 		var channelListPrompt = {
 			"role": "system",
-			"name": "Channel List",
+			"name": "channel_list",
 			"content": JSON.stringify(channels)
 		};
 
 		// General info (about the guild)
 		var generalInfoPrompt = {
 			"role": "system",
-			"name": "Guild Info",
+			"name": "guild_info",
 			"content": JSON.stringify(message.guild)
 		};
 
