@@ -285,7 +285,7 @@ client.on('messageCreate', async (message) => {
 		return message.channel.send({
 			"embeds": [{
 				"title": "Error",
-				"description": `${lang.errors[err.response.status]}`,
+				"description": `An error occured: \njson\n\`\`\`{${JSON.stringify(err, null, "\t")}}\`\`\``,
 				"color": 0xFF0000
 			}]
 		})
