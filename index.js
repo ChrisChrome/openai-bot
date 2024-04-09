@@ -179,16 +179,26 @@ client.on('messageCreate', async (message) => {
 	if (message.content.startsWith("!!")) return; // So you can chat without the bot replying
 	// If the session doesn't exist, create it
 	if (!sessions[message.channelId]) {
+		// Generate a users table, key is users username, value is their display name
+		var users = {};
+		message.guild.members.cache.forEach((member) => {
+			users[member.user.username] = member.displayName;
+		});
+		var userListPrompt = {
+			"role": "system",
+			"name": "System",
+			"content": JSON.stringify(users)
+		};
 		if (message.channel.nsfw) {
 			sessions[message.channelId] = {
 				model: config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId],
-				messages: [basePrompt, nsfwPrompt],
+				messages: [basePrompt, userListPrompt, nsfwPrompt],
 				started: new Date(),
 			}
 		} else {
 			sessions[message.channelId] = {
 				model: config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId],
-				messages: [basePrompt],
+				messages: [basePrompt, userListPrompt],
 				started: new Date(),
 			};
 		}
