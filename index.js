@@ -182,7 +182,17 @@ client.on('messageCreate', async (message) => {
 		// Generate a users table, key is users username, value is their display name
 		var users = {};
 		message.guild.members.cache.forEach((member) => {
-			users[member.user.username] = member.displayName;
+			users[member.user.username] = {
+				"displayName": member.displayName,
+				"id": member.id,
+				"roles": member.roles.cache.map((role) => {
+					return {
+						"name": role.name,
+						"color": role.hexColor,
+						"permissions": role.permissions.toArray()
+					};
+				})
+			};
 		});
 		var userListPrompt = {
 			"role": "system",
