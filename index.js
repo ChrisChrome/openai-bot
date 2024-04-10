@@ -230,13 +230,13 @@ client.on('messageCreate', async (message) => {
 		if (message.channel.nsfw) {
 			sessions[message.channelId] = {
 				model: config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId],
-				messages: [basePrompt, generalInfoPrompt, userListPrompt, channelListPrompt, nsfwPrompt],
+				messages: [basePrompt, generalInfoPrompt, nsfwPrompt],
 				started: new Date(),
 			}
 		} else {
 			sessions[message.channelId] = {
 				model: config.discord.authorized_channels[message.channelId] || config.discord.authorized_channels[message.channel.parentId],
-				messages: [basePrompt, generalInfoPrompt, userListPrompt, channelListPrompt],
+				messages: [basePrompt, generalInfoPrompt],
 				started: new Date(),
 			};
 		}
